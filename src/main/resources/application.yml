@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: postgre-store
+
+  # 1. Database Connection Info
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgre_store_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+    # 2. HikariCP Connection Pool Tuning
+    hikari:
+      pool-name: PostgreStoreHikariPool
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000 # 30 seconds max wait for a free connection
+      idle-timeout: 600000 # 10 minutes before releasing an idle connection
+      max-lifetime: 1800000 # 30 minutes max lifetime for any connection
+
+  # 3. JPA / Hibernate Configuration
+  jpa:
+    open-in-view: false # Disables OSIV (Open Session In View)
+    hibernate:
+      ddl-auto: validate # Validates entity classes against DB tables without altering tables
+    properties:
+      hibernate:
+        format_sql: true # Formats SQL nicely in terminal logs
+    show-sql: false # We use structured logging below instead of raw stdout
+
+  # 4. Flyway Migration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+# 5. SQL Logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG # Prints executed SQL statements
+    org.hibernate.orm.jdbc.bind: TRACE # Prints values of SQL parameters (?, ?)
