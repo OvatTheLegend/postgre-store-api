@@ -92,7 +92,6 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Should filter products by price range and sort by price ascending")
     void shouldFilterByPriceRangeAndSort() {
-        // --- ARRANGE: 3 products with different prices ---
         Product budget = new Product("SKU-BUDGET", "Budget Mouse", "Accessory", new BigDecimal("25.00"), 50);
         Product mid = new Product("SKU-MID", "Mid-range Keyboard", "Accessory", new BigDecimal("75.00"), 20);
         Product premium = new Product("SKU-PREMIUM", "Premium Monitor", "Display", new BigDecimal("450.00"), 5);
@@ -102,13 +101,11 @@ class ProductRepositoryTest {
         entityManager.persist(premium);
         entityManager.flush();
 
-        // --- ACT: Find products between $20 and $100, sorted by price ASC ---
         Page<Product> results = productRepository.findByPriceBetween(
                 new BigDecimal("20.00"),
                 new BigDecimal("100.00"),
                 PageRequest.of(0, 10, Sort.by("price").ascending()));
 
-        // --- ASSERT: Budget ($25) and Mid ($75) are found in exact ascending order ---
         assertThat(results.getContent()).hasSize(2);
         assertThat(results.getContent().get(0).getPrice()).isEqualByComparingTo("25.00");
         assertThat(results.getContent().get(1).getPrice()).isEqualByComparingTo("75.00");
@@ -117,7 +114,6 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Should search products by keyword in name or description case-insensitively")
     void shouldSearchByKeywordCaseInsensitively() {
-        // --- ARRANGE: 2 products with keywords in different fields ---
         Product keyboard = new Product("SKU-KEYBOARD", "Mechanical Keyboard", "RGB backlit keys",
                 new BigDecimal("120.00"), 10);
         Product headphones = new Product("SKU-HEADPHONES", "Studio Headphones",
@@ -127,13 +123,10 @@ class ProductRepositoryTest {
         entityManager.persist(headphones);
         entityManager.flush();
 
-        // --- ACT 1: Search keyword in name (lowercase search "mech") ---
         Page<Product> nameMatch = productRepository.searchByKeyword("mech", PageRequest.of(0, 10));
 
-        // --- ACT 2: Search keyword in description (uppercase search "NOISE") ---
         Page<Product> descMatch = productRepository.searchByKeyword("NOISE", PageRequest.of(0, 10));
 
-        // --- ASSERT ---
         assertThat(nameMatch.getContent()).hasSize(1);
         assertThat(nameMatch.getContent().getFirst().getSku()).isEqualTo("SKU-KEYBOARD");
 
