@@ -58,7 +58,6 @@ public class ProductController {
         return ResponseEntity.ok(page);
     }
 
-    // 5. GET: Paginated Search by keyword -> 200 OK
     @GetMapping("/search")
     public ResponseEntity<Page<ProductResponse>> searchProducts(
             @RequestParam String query,
@@ -67,7 +66,6 @@ public class ProductController {
         return ResponseEntity.ok(results);
     }
 
-    // 6. PUT: Full Update -> 200 OK
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable UUID id,
@@ -76,7 +74,6 @@ public class ProductController {
         return ResponseEntity.ok(updated);
     }
 
-    // 7. PATCH: Stock Adjustment -> 200 OK
     @PatchMapping("/{id}/stock")
     public ResponseEntity<ProductResponse> adjustStock(
             @PathVariable UUID id,
@@ -85,7 +82,6 @@ public class ProductController {
         return ResponseEntity.ok(updated);
     }
 
-    // 8. DELETE: Delete Product -> 204 No Content
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
